@@ -1,0 +1,74 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which of these is a valid variable name in Python?",
+      "choices": ["1name", "user_name", "user-name", "user name"],
+      "answer": 1,
+      "explanation": "Variable names cannot start with a digit and cannot contain spaces or hyphens; underscores are allowed."
+    },
+    {
+      "id": 2,
+      "question": "What is the output type of: 3 / 2 in Python 3?",
+      "choices": ["int", "float", "str", "bool"],
+      "answer": 1,
+      "explanation": "Division with / in Python 3 always returns a float."
+    },
+    {
+      "id": 3,
+      "question": "Which statement is used for conditional execution?",
+      "choices": ["for", "while", "if", "def"],
+      "answer": 2,
+      "explanation": "The if statement is used to run code conditionally."
+    },
+    {
+      "id": 4,
+      "question": "How do you define a function named greet that takes no parameters?",
+      "choices": ["function greet():", "def greet():", "fn greet():", "create greet():"],
+      "answer": 1,
+      "explanation": "Functions are defined with def in Python."
+    },
+    {
+      "id": 5,
+      "question": "Which loop will always execute its body at least once?",
+      "choices": ["for loop", "while loop", "do-while loop (not native to Python)", "None of the above"],
+      "answer": 2,
+      "explanation": "Python does not have a native do-while loop; therefore none of Python's loops guarantee execution at least once."
+    },
+    {
+      "id": 6,
+      "question": "What does the len() function return when called on a list?",
+      "choices": ["The number of elements in the list", "The memory size of the list", "The last element", "The list itself"],
+      "answer": 0,
+      "explanation": "len() returns the number of items."
+    },
+    {
+      "id": 7,
+      "question": "Which error type is raised when you try to divide by zero?",
+      "choices": ["TypeError", "ValueError", "ZeroDivisionError", "NameError"],
+      "answer": 2,
+      "explanation": "Dividing by zero raises ZeroDivisionError."
+    },
+    {
+      "id": 8,
+      "question": "How do you add an element x to the end of list lst?",
+      "choices": ["lst.add(x)", "lst.append(x)", "lst.push(x)", "lst.insert(x)"],
+      "answer": 1,
+      "explanation": "Use lst.append(x) to add to the end."
+    },
+    {
+      "id": 9,
+      "question": "Which of the following is a tuple literal?",
+      "choices": ["[1, 2, 3]", "{1, 2, 3}", "(1, 2, 3)", "<1, 2, 3>"],
+      "answer": 2,
+      "explanation": "Tuples use parentheses."
+    },
+    {
+      "id": 10,
+      "question": "What is the correct way to catch exceptions?",
+      "choices": ["try:\n    ...\nexcept Exception as e:\n    ...", "attempt:\n    ...\ncatch e:\n    ...", "try:\n    ...\ncatch Exception:\n    ...", "handle:\n    ...\nexcept:\n    ..."],
+      "answer": 0,
+      "explanation": "Python uses try/except; the first form captures the exception object as e."
+    }
+  ]
+}
