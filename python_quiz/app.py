@@ -6,22 +6,43 @@ Usage: python3 -m python_quiz.app
 import json
 import os
 import sys
+from typing import List, Dict, Any, Optional
 
-CHOICE_LETTERS = ["A", "B", "C", "D"]
+CHOICE_LETTERS = ["A", "B", "C", "D", "E", "F"]
 
 
-def load_questions():
+def load_questions() -> List[Dict[str, Any]]:
     path = os.path.join(os.path.dirname(__file__), "questions.json")
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
-            return data.get("questions") if isinstance(data, dict) else data
+            questions = data.get("questions") if isinstance(data, dict) else data
+            if not isinstance(questions, list):
+                print("questions.json has unexpected format (expected list of questions).")
+                sys.exit(1)
+            validate_questions(questions)
+            return questions
     except FileNotFoundError:
         print("questions.json not found. Ensure you run this package from the repo.")
         sys.exit(1)
+    except ValueError as e:
+        print(f"Invalid questions.json: {e}")
+        sys.exit(1)
 
 
-def format_question(q, index):
+def validate_questions(questions: List[Dict[str, Any]]) -> None:
+    for q in questions:
+        if not isinstance(q, dict):
+            raise ValueError("Each question must be an object/dictionary")
+        if "id" not in q or "question" not in q or "choices" not in q or "answer" not in q:
+            raise ValueError(f"Question missing required fields: {q}")
+        if not isinstance(q["choices"], list) or len(q["choices"]) == 0:
+            raise ValueError(f"Question {q.get('id')} has no choices")
+        if not isinstance(q["answer"], int) or not (0 <= q["answer"] < len(q["choices"])):
+            raise ValueError(f"Question {q.get('id')} has invalid answer index: {q.get('answer')}")
+
+
+def format_question(q: Dict[str, Any], index: int) -> str:
     lines = []
     lines.append(f"{index}. {q.get('question')}")
     for i, choice in enumerate(q.get("choices", [])):
@@ -30,11 +51,16 @@ def format_question(q, index):
     return "\n".join(lines)
 
 
-def get_choice_input(num_choices):
+def get_choice_input(num_choices: int) -> Optional[int]:
     valid_letters = CHOICE_LETTERS[:num_choices]
     prompt = f"Enter choice ({'/'.join(valid_letters)}), or number (1-{num_choices}), or 'q' to quit: "
     while True:
-        ans = input(prompt).strip()
+        try:
+            ans = input(prompt).strip()
+        except (KeyboardInterrupt, EOFError):
+            # Gracefully handle Ctrl+C / Ctrl+D
+            print("\nQuiz aborted by user.")
+            return None
         if not ans:
             continue
         if ans.lower() == "q":
@@ -51,7 +77,7 @@ def get_choice_input(num_choices):
         print("Invalid choice. Try again.")
 
 
-def main():
+def main() -> None:
     questions = load_questions()
     if not questions:
         print("No questions found.")
@@ -66,15 +92,26 @@ def main():
         print(format_question(q, idx))
         choice = get_choice_input(len(q.get("choices", [])))
         if choice is None:
-            print("\nQuiz aborted by user.\n")
+            # User chose to quit or aborted
             break
         asked += 1
-        if choice == q.get("answer"):
+        try:
+            correct_index = int(q.get("answer"))
+        except (TypeError, ValueError):
+            print("Question has an invalid answer configured. Skipping.")
+            continue
+        if choice == correct_index:
             print("Correct!\n")
             correct += 1
         else:
-            print(f"Incorrect. Correct answer: {CHOICE_LETTERS[q.get('answer')]}\n")
-            incorrect_list.append({"question": q.get("question"), "your": choice, "correct": q.get("answer"), "explanation": q.get("explanation")})
+            corr_letter = CHOICE_LETTERS[correct_index] if correct_index < len(CHOICE_LETTERS) else str(correct_index + 1)
+            print(f"Incorrect. Correct answer: {corr_letter}\n")
+            incorrect_list.append({
+                "question": q.get("question"),
+                "your": choice,
+                "correct": correct_index,
+                "explanation": q.get("explanation"),
+            })
 
     # Summary
     print("\n--- Quiz Summary ---")
