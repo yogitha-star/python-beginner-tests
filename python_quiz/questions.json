@@ -32,7 +32,7 @@
       "id": 5,
       "question": "Which loop will always execute its body at least once?",
       "choices": ["for loop", "while loop", "do-while loop (not native to Python)", "None of the above"],
-      "answer": 2,
+      "answer": 3,
       "explanation": "Python does not have a native do-while loop; therefore none of Python's loops guarantee execution at least once."
     },
     {
